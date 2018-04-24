@@ -1,64 +1,73 @@
 package sk.peterziska.funtasty.Presenter;
 
-import android.util.Log;
+import com.firebase.jobdispatcher.Constraint;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.RetryStrategy;
+import com.firebase.jobdispatcher.Trigger;
 
 import java.util.List;
 
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
-import jonathanfinerty.once.Once;
 import sk.peterziska.funtasty.Data.DatabaseManager;
 import sk.peterziska.funtasty.Data.Meteor;
-import sk.peterziska.funtasty.Data.Services.MeteorAPI;
-import sk.peterziska.funtasty.MyTaskService;
+import sk.peterziska.funtasty.MyJobService;
+import sk.peterziska.funtasty.Services.MeteorAPI;
 import sk.peterziska.funtasty.UI.Activity.MeteorActivity;
 
-public class MainPresenter {
+public class MainPresenter implements PresenterInterface{
 
     private MeteorActivity mMeteorActivity;
-    private static final String INIT_SYNC_ON_INSTALL = "INIT_FUNTASTY_APP";
+    RealmResults<Meteor> meteors;
 
 
     public MainPresenter(MeteorActivity activity){
         mMeteorActivity = activity;
-        //getMeteors();
 
-        RealmResults<Meteor> meteors = DatabaseManager.getInstance().getMeteors();
+        meteors = DatabaseManager.getInstance().getMeteors();
         meteors.addChangeListener(new RealmChangeListener<RealmResults<Meteor>>() {
             @Override
-            public void onChange(RealmResults<Meteor> meteors) {
-                Log.e("DATA","CHANGED");
-                setRecyclerData();
+            public void onChange(RealmResults<Meteor> meteors) {        //change listener for realm database
+                setRecyclerData(meteors);
             }
         });
 
         if (DatabaseManager.getInstance().isDatabaseEmpty()){
             new MeteorAPI();
         }else{
-            setRecyclerData();
+            setRecyclerData(DatabaseManager.getInstance().getMeteors());
         }
+
         scheduleSync();
     }
 
     private void scheduleSync() {
-        MyTaskService.scheduleSync(mMeteorActivity);
-        /*Once.initialise(mMeteorActivity);
-        if (!Once.beenDone(Once.THIS_APP_INSTALL, INIT_SYNC_ON_INSTALL)) {
-            MyTaskService.scheduleSync(mMeteorActivity);
-            Once.markDone(INIT_SYNC_ON_INSTALL);
-        }else{
-            Log.e("BEEN", "DONE");
-            setRecyclerData();
-        }*/
+        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(mMeteorActivity));
+        Job myJob = dispatcher.newJobBuilder()
+                .setService(MyJobService.class)
+                .setLifetime(Lifetime.FOREVER)
+                .setTag("UniqueTagForYourJob")
+                .setReplaceCurrent(false)
+                .setRecurring(true)
+                .setTrigger(Trigger.executionWindow(86340, 86400))
+                .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
+                .setConstraints(Constraint.ON_ANY_NETWORK)
+                .build();
+
+        dispatcher.mustSchedule(myJob);
     }
 
-    public void setRecyclerData(){
-        mMeteorActivity.setMeteorRecyclerView(DatabaseManager.getInstance().getMeteors());
+    public void setRecyclerData(List<Meteor> meteors){
+        mMeteorActivity.setMeteorRecyclerView(meteors);
+        mMeteorActivity.setSumMeteorsTextView(String.valueOf(meteors.size()));
+        mMeteorActivity.hideProgressBar();
     }
 
-
-    public List<Meteor> getMeteors(){
-        MeteorAPI api = new MeteorAPI();
-        return api.getMeteors();
+    @Override
+    public void unregister() {
+        DatabaseManager.getInstance().realmClose();
     }
 }

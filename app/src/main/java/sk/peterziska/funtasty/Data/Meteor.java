@@ -2,9 +2,18 @@ package sk.peterziska.funtasty.Data;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
+/**
+ * Realm database
+ */
 public class Meteor extends RealmObject{
 
     @PrimaryKey
@@ -15,10 +24,11 @@ public class Meteor extends RealmObject{
     private String name;
 
     @SerializedName("year")
-    private String year;
+    private Date year;
 
     @SerializedName("mass")
     private double mass;
+
 
     public Meteor() {}
 
@@ -38,11 +48,11 @@ public class Meteor extends RealmObject{
         this.name = name;
     }
 
-    public String getYear() {
+    public Date getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(Date year) {
         this.year = year;
     }
 

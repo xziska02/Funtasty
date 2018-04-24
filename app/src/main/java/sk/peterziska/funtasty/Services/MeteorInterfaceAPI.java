@@ -1,4 +1,4 @@
-package sk.peterziska.funtasty.Data.Services;
+package sk.peterziska.funtasty.Services;
 
 import java.util.List;
 

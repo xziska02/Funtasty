@@ -1,8 +1,12 @@
-package sk.peterziska.funtasty.Data.Services;
+package sk.peterziska.funtasty.Services;
 
 import android.util.Log;
 
-import java.io.IOException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -19,20 +23,25 @@ public class MeteorAPI {
 
     private List<Meteor> mMeteors;
     public MeteorAPI(){
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
+                .create();
+
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl("https://data.nasa.gov/")
-                .addConverterFactory(GsonConverterFactory.create());
-        Retrofit retrofit = builder.build();
+                .addConverterFactory(GsonConverterFactory.create(gson));
 
+        Retrofit retrofit = builder.build();
+        mMeteors = new ArrayList<>();
         MeteorInterfaceAPI meteorInterfaceAPI = retrofit.create(MeteorInterfaceAPI.class);
         Call<List<Meteor>> call = meteorInterfaceAPI.getMeteors(API_TOKEN);
+
 
         call.enqueue(new Callback<List<Meteor>>() {
             @Override
             public void onResponse(Call<List<Meteor>> call, Response<List<Meteor>> response) {
                 Log.d("API" , "SUCCESS " + response.body().get(0).getId());
                 DatabaseManager.getInstance().saveToDatabase(response.body());
-                mMeteors = response.body();
             }
 
             @Override
@@ -43,7 +52,5 @@ public class MeteorAPI {
         });
     }
 
-    public List<Meteor> getMeteors(){
-        return mMeteors;
-    }
+
 }

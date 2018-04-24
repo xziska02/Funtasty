@@ -9,16 +9,22 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.RealmList;
+import sk.peterziska.funtasty.Data.DatabaseManager;
 import sk.peterziska.funtasty.Data.Meteor;
 import sk.peterziska.funtasty.R;
 
 public class MeteorAdapter extends RecyclerView.Adapter<MeteorAdapter.CustomViewHolder> {
 
     List<Meteor> mMeteorList;
+
 
     public MeteorAdapter(List<Meteor> meteors){
         mMeteorList = meteors;
@@ -35,6 +41,9 @@ public class MeteorAdapter extends RecyclerView.Adapter<MeteorAdapter.CustomView
     public void onBindViewHolder(CustomViewHolder holder, int position) {
         holder.name.setText(mMeteorList.get(position).getName());
         holder.size.setText(String.valueOf(mMeteorList.get(position).getMass()));
+        Date date = mMeteorList.get(position).getYear();
+        String currentDateTimeString = DateFormat.getDateTimeInstance().format(date);
+        holder.date.setText(currentDateTimeString);
     }
 
     @Override
@@ -49,6 +58,9 @@ public class MeteorAdapter extends RecyclerView.Adapter<MeteorAdapter.CustomView
 
         @BindView(R.id.size_text_view)
         TextView size;
+
+        @BindView(R.id.date_text_view)
+        TextView date;
 
 
         public CustomViewHolder(View itemView) {

@@ -2,7 +2,14 @@ package sk.peterziska.funtasty.Data;
 
 import android.util.Log;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -25,19 +32,40 @@ public class DatabaseManager {
     }
 
 
-
-    public void saveToDatabase(final List<Meteor> info) {
+    /**
+     * save to database
+     * @param meteors
+     */
+    public void saveToDatabase(final List<Meteor> meteors) {
         realm.beginTransaction();
-        realm.insertOrUpdate(info);
+        realm.insertOrUpdate(meteors);
         realm.commitTransaction();
-        Log.e("DATABASE","SIZE" + getMeteors().size());
     }
 
     public boolean isDatabaseEmpty(){
         return realm.isEmpty();
     }
 
+    /**
+     * Returns meteors from 2011
+     * @return
+     */
     public RealmResults<Meteor> getMeteors(){
-        return realm.where(Meteor.class).findAll().sort("mass", Sort.DESCENDING);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, 31); // make sure month stays valid
+        calendar.set(Calendar.YEAR, 2010);
+        calendar.set(Calendar.MONTH, Calendar.DECEMBER);
+        Date date = new Date(calendar.getTimeInMillis());
+        return realm.where(Meteor.class).
+                greaterThanOrEqualTo("year", date).
+                findAll().sort("mass", Sort.DESCENDING);
+    }
+
+    /**
+     * Close realm and null instance object
+     */
+    public void realmClose(){
+        instance = null;
+        realm.close();
     }
 }
