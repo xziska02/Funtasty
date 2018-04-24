@@ -32,6 +32,7 @@ public class MainPresenter implements PresenterInterface{
     RealmResults<Meteor> meteors;
     private String TAG = MainPresenter.class.getCanonicalName();
 
+
     public MainPresenter(MeteorActivity activity){
         mMeteorActivity = activity;
 
@@ -50,7 +51,8 @@ public class MainPresenter implements PresenterInterface{
                     public void run() {
                         try {
                             while (!haveNetworkConnection()) {
-                                WifiManager wifiManager = (WifiManager)mMeteorActivity.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                                WifiManager wifiManager = (WifiManager)mMeteorActivity.
+                                        getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                                 wifiManager.setWifiEnabled(true);
                                 Thread.sleep(1000);
                             }
@@ -66,7 +68,6 @@ public class MainPresenter implements PresenterInterface{
         }else{
             setRecyclerData(DatabaseManager.getInstance().getMeteors());
         }
-
         scheduleSync();
     }
 
@@ -74,7 +75,8 @@ public class MainPresenter implements PresenterInterface{
         boolean haveConnectedWifi = false;
         boolean haveConnectedMobile = false;
 
-        ConnectivityManager connectivityManager  = (ConnectivityManager) mMeteorActivity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager  = (ConnectivityManager) mMeteorActivity.
+                getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo[] netInfos = connectivityManager .getAllNetworkInfo();
         for (NetworkInfo netInfo : netInfos) {
             if (netInfo.getTypeName().equalsIgnoreCase("WIFI"))
@@ -92,7 +94,7 @@ public class MainPresenter implements PresenterInterface{
         Job myJob = dispatcher.newJobBuilder()
                 .setService(MyJobService.class)
                 .setLifetime(Lifetime.FOREVER)
-                .setTag("UniqueTagForYourJob")
+                .setTag(TAG)
                 .setReplaceCurrent(false)
                 .setRecurring(true)
                 .setTrigger(Trigger.executionWindow(86340, 86400))

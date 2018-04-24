@@ -11,6 +11,7 @@ import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -42,7 +43,9 @@ public class MeteorAdapter extends RecyclerView.Adapter<MeteorAdapter.CustomView
         holder.name.setText(mMeteorList.get(position).getName());
         holder.size.setText(String.valueOf(mMeteorList.get(position).getMass()));
         Date date = mMeteorList.get(position).getYear();
-        String currentDateTimeString = DateFormat.getDateTimeInstance().format(date);
+        SimpleDateFormat mdformat = new SimpleDateFormat("dd.MM.yyyy");
+        String currentDateTimeString = mdformat.format(date);
+
         holder.date.setText(currentDateTimeString);
     }
 
