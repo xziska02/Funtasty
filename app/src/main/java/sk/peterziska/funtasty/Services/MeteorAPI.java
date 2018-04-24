@@ -21,7 +21,6 @@ public class MeteorAPI {
 
     private static final String API_TOKEN = "BBdRUnVA9wDQEpV2MXhEFTA0s";
 
-    private List<Meteor> mMeteors;
     public MeteorAPI(){
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
@@ -32,22 +31,18 @@ public class MeteorAPI {
                 .addConverterFactory(GsonConverterFactory.create(gson));
 
         Retrofit retrofit = builder.build();
-        mMeteors = new ArrayList<>();
         MeteorInterfaceAPI meteorInterfaceAPI = retrofit.create(MeteorInterfaceAPI.class);
         Call<List<Meteor>> call = meteorInterfaceAPI.getMeteors(API_TOKEN);
-
 
         call.enqueue(new Callback<List<Meteor>>() {
             @Override
             public void onResponse(Call<List<Meteor>> call, Response<List<Meteor>> response) {
-                Log.d("API" , "SUCCESS " + response.body().get(0).getId());
                 DatabaseManager.getInstance().saveToDatabase(response.body());
             }
 
             @Override
             public void onFailure(Call<List<Meteor>> call, Throwable t) {
                 Log.d("API" , "ERROR" + t.getMessage());
-
             }
         });
     }

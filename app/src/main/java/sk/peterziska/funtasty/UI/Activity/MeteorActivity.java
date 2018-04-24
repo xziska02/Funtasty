@@ -25,8 +25,6 @@ import sk.peterziska.funtasty.UI.Adapters.MeteorAdapter;
 
 public class MeteorActivity extends AppCompatActivity {
 
-    private static final String TAG = MeteorActivity.class.getCanonicalName();
-
     @BindView(R.id.meteor_recycler)
     RecyclerView mMeteorRecyclerView;
 
