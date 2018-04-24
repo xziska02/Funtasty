@@ -29,6 +29,8 @@ public class Meteor extends RealmObject{
     @SerializedName("mass")
     private double mass;
 
+    @SerializedName("geolocation")
+    private Geolocation geolocation;
 
     public Meteor() {}
 
@@ -62,5 +64,13 @@ public class Meteor extends RealmObject{
 
     public void setMass(double mass) {
         this.mass = mass;
+    }
+
+    public Geolocation getGeolocation() {
+        return geolocation;
+    }
+
+    public void setGeolocation(Geolocation geolocation) {
+        this.geolocation = geolocation;
     }
 }

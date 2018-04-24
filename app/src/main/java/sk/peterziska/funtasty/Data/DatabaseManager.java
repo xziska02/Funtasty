@@ -1,15 +1,6 @@
 package sk.peterziska.funtasty.Data;
 
-import android.util.Log;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -51,13 +42,7 @@ public class DatabaseManager {
      * @return
      */
     public RealmResults<Meteor> getMeteors(){
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH, 31); // make sure month stays valid
-        calendar.set(Calendar.YEAR, 2010);
-        calendar.set(Calendar.MONTH, Calendar.DECEMBER);
-        Date date = new Date(calendar.getTimeInMillis());
         return realm.where(Meteor.class).
-                greaterThanOrEqualTo("year", date).
                 findAll().sort("mass", Sort.DESCENDING);
     }
 
