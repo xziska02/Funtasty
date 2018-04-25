@@ -92,7 +92,7 @@ public class MeteorAdapter extends RecyclerView.Adapter<MeteorAdapter.CustomView
             Geolocation geo = mMeteorList.get(position).getGeolocation();
             String name = mMeteorList.get(position).getName();
 
-            intent.putExtra("longitude",geo.getCoordinates().get(0));
+            intent.putExtra("longitude",geo.getCoordinates().get(0));       //put data to show map marker
             intent.putExtra("latitude",geo.getCoordinates().get(1));
             intent.putExtra("name",name);
 

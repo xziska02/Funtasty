@@ -1,12 +1,14 @@
 package sk.peterziska.funtasty.UI.Activity;
 
-import android.content.Intent;
+
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -33,6 +35,8 @@ public class MeteorActivity extends AppCompatActivity {
     @BindView(R.id.progressBar)
     ProgressBar mProgressBar;
 
+    @BindView(R.id.no_internet_image)
+    ImageView mNoInternetImage;
 
     private MainPresenter mPresenter;
 
@@ -45,6 +49,16 @@ public class MeteorActivity extends AppCompatActivity {
         mProgressBar.setVisibility(View.VISIBLE);
         mPresenter = new MainPresenter(this);   //Set presenter
 
+    }
+
+    public void showProgressBar(){
+        mConstraintLayout.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void setNoInternetImage(){
+        mNoInternetImage.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.INVISIBLE);
     }
 
     //Hide progressbarr, when data is available

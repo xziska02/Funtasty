@@ -1,9 +1,11 @@
 package sk.peterziska.funtasty.Presenter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.util.TimeUtils;
 
@@ -34,9 +36,9 @@ public class MainPresenter implements PresenterInterface{
 
     private final int DAY_NUMBER = 1;
     private final int HALF_HOUR = 30;
+    private final String TAG = MainPresenter.class.getCanonicalName();
     private MeteorActivity mMeteorActivity;
-    RealmResults<Meteor> meteors;
-    private String TAG = MainPresenter.class.getCanonicalName();
+    private RealmResults<Meteor> meteors;
 
 
     public MainPresenter(MeteorActivity activity){
@@ -51,32 +53,67 @@ public class MainPresenter implements PresenterInterface{
         });
 
         if (DatabaseManager.getInstance().isDatabaseEmpty()){
-            if (!isConnectedWifi()){                      //app was first time started without wifi enable
-                Thread t = new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            while (!isConnectedWifi()) {
-                                WifiManager wifiManager = (WifiManager)mMeteorActivity.
-                                        getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                                wifiManager.setWifiEnabled(true);
-                                Thread.sleep(1000);
+            if (!isConnectedWifi()){                      //app was first time started without wifi enabled
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mMeteorActivity);
+                alertDialogBuilder.setTitle("No Internet Connection");
+                alertDialogBuilder
+                        .setMessage("Enable internet or come later?")
+                        .setCancelable(false)
+                        .setPositiveButton("Come later",
+                                    new DialogInterface.OnClickListener() { //user doesnt want to enable Internet connection
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        mMeteorActivity.setNoInternetImage();
+                                    }
+                                })
+
+                        .setNegativeButton("Enable", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                mMeteorActivity.showProgressBar();      //progress bar action
+                                enableInternet();                       //enable internet
+                                dialog.cancel();
                             }
-                            new MeteorAPI();
-                        } catch (Exception e) {
-                        }
-                    }
-                };
-                t.start();
-            }else {
-                new MeteorAPI();
+                        });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+
+            }else {                     //connection is available
+                new MeteorAPI();        //download data
             }
-        }else{
+        }else{  //database is initialized, view can be shown
             setRecyclerData(DatabaseManager.getInstance().getMeteors());
         }
         scheduleSync();
     }
 
+    /**
+     * enables internet
+     */
+    private void enableInternet(){
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (!isConnectedWifi()) {
+                        WifiManager wifiManager = (WifiManager)mMeteorActivity.         //enable wifi
+                                getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                        wifiManager.setWifiEnabled(true);
+                        Thread.sleep(1000);
+                    }
+                    new MeteorAPI();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        t.start();
+    }
+
+    /**
+     * checks if internet is available
+     * @return
+     */
     private boolean isConnectedWifi() {
         boolean haveConnectedWifi = false;
         boolean haveConnectedMobile = false;
@@ -95,6 +132,10 @@ public class MainPresenter implements PresenterInterface{
         return haveConnectedWifi || haveConnectedMobile;
     }
 
+
+    /**
+     * schedule periodic task
+     */
     private void scheduleSync() {
         int dayInSeconds = (int)TimeUnit.DAYS.toSeconds(DAY_NUMBER);
         int halfHour = (int)TimeUnit.MINUTES.toSeconds(HALF_HOUR);
@@ -104,8 +145,8 @@ public class MainPresenter implements PresenterInterface{
                 .setLifetime(Lifetime.FOREVER)
                 .setTag(TAG)
                 .setReplaceCurrent(false)
-                .setRecurring(true)
-                .setTrigger(Trigger.executionWindow(dayInSeconds-halfHour, dayInSeconds))
+                .setRecurring(true)         //periodic task
+                .setTrigger(Trigger.executionWindow(dayInSeconds-halfHour, dayInSeconds))   //every 24 hours
                 .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
                 .setConstraints(Constraint.ON_ANY_NETWORK)
                 .build();
@@ -113,6 +154,10 @@ public class MainPresenter implements PresenterInterface{
         dispatcher.mustSchedule(myJob);
     }
 
+    /**
+     * Show UI
+     * @param meteors
+     */
     public void setRecyclerData(List<Meteor> meteors){
         mMeteorActivity.setMeteorRecyclerView(meteors);
         mMeteorActivity.setSumMeteorsTextView(String.valueOf(meteors.size()));

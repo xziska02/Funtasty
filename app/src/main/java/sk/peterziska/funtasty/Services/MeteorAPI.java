@@ -36,7 +36,7 @@ public class MeteorAPI {
 
         call.enqueue(new Callback<List<Meteor>>() {
             @Override
-            public void onResponse(Call<List<Meteor>> call, Response<List<Meteor>> response) {
+            public void onResponse(Call<List<Meteor>> call, Response<List<Meteor>> response) {      //save to database whole response
                 DatabaseManager.getInstance().saveToDatabase(response.body());
             }
 
