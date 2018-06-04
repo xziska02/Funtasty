@@ -19,16 +19,12 @@ public class Meteor extends RealmObject{
     @PrimaryKey
     @SerializedName("id")
     private String id;
-
     @SerializedName("name")
     private String name;
-
     @SerializedName("year")
     private Date year;
-
     @SerializedName("mass")
     private double mass;
-
     @SerializedName("geolocation")
     private Geolocation geolocation;
 

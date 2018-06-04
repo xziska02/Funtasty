@@ -9,7 +9,6 @@ import io.realm.RealmObject;
 
 public class Geolocation extends RealmObject {
 
-
     @SerializedName("coordinates")
     private RealmList<String> coordinates;
 

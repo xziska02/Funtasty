@@ -1,5 +1,6 @@
 package sk.peterziska.funtasty.Services;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -20,32 +21,54 @@ import sk.peterziska.funtasty.Data.Meteor;
 public class MeteorAPI {
 
     private static final String API_TOKEN = "BBdRUnVA9wDQEpV2MXhEFTA0s";
+    private static MeteorAPI instance;
+    private Gson gson;
+    private Retrofit.Builder builder;
+    private Retrofit retrofit;
+    private MeteorInterfaceAPI meteorInterfaceAPI;
 
-    public MeteorAPI(){
-        Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
-                .create();
+    private MeteorAPI(){
+        setRetrofit();
+    }
 
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("https://data.nasa.gov/")
-                .addConverterFactory(GsonConverterFactory.create(gson));
+    public static MeteorAPI getInstance(){
+        if (instance == null){
+            instance = new MeteorAPI();
+        }
+        return instance;
+    }
 
-        Retrofit retrofit = builder.build();
-        MeteorInterfaceAPI meteorInterfaceAPI = retrofit.create(MeteorInterfaceAPI.class);
+    public void fetchData(){
+
         Call<List<Meteor>> call = meteorInterfaceAPI.getMeteors(API_TOKEN);
-
         call.enqueue(new Callback<List<Meteor>>() {
+
             @Override
-            public void onResponse(Call<List<Meteor>> call, Response<List<Meteor>> response) {      //save to database whole response
+            public void onResponse(@NonNull Call<List<Meteor>> call, @NonNull Response<List<Meteor>> response) {      //save to database whole response
                 DatabaseManager.getInstance().saveToDatabase(response.body());
             }
 
             @Override
-            public void onFailure(Call<List<Meteor>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<Meteor>> call, @NonNull Throwable t) {
                 Log.d("API" , "ERROR" + t.getMessage());
             }
         });
     }
+
+    private void setRetrofit(){
+
+        gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
+                .create();
+
+        builder = new Retrofit.Builder()
+                .baseUrl("https://data.nasa.gov/")
+                .addConverterFactory(GsonConverterFactory.create(gson));
+
+        retrofit = builder.build();
+        meteorInterfaceAPI = retrofit.create(MeteorInterfaceAPI.class);
+    }
+
 
 
 }

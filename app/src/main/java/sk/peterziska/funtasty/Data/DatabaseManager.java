@@ -11,23 +11,20 @@ public class DatabaseManager {
     private static DatabaseManager instance;
     private Realm realm;
 
-    public DatabaseManager() {
+    private DatabaseManager() {
         realm = Realm.getDefaultInstance();
     }
 
     public static DatabaseManager getInstance( ) {
+
         if (instance == null){
             instance = new DatabaseManager();
         }
         return instance;
     }
 
-
-    /**
-     * save to database
-     * @param meteors
-     */
     public void saveToDatabase(final List<Meteor> meteors) {
+
         realm.beginTransaction();
         realm.insertOrUpdate(meteors);
         realm.commitTransaction();
@@ -37,19 +34,14 @@ public class DatabaseManager {
         return realm.isEmpty();
     }
 
-    /**
-     * Returns meteors from 2011
-     * @return
-     */
     public RealmResults<Meteor> getMeteors(){
+
         return realm.where(Meteor.class).
                 findAll().sort("mass", Sort.DESCENDING);
     }
 
-    /**
-     * Close realm and null instance object
-     */
     public void realmClose(){
+
         instance = null;
         realm.close();
     }

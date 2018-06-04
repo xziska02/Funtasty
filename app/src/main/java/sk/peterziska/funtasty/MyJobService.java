@@ -9,9 +9,11 @@ import com.firebase.jobdispatcher.JobService;
 import sk.peterziska.funtasty.Services.MeteorAPI;
 
 public class MyJobService extends JobService {
+
     @Override
     public boolean onStartJob(JobParameters job) {
-        new MeteorAPI();
+
+        MeteorAPI.getInstance().fetchData();
         return false;
     }
 

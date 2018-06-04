@@ -18,25 +18,23 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private String name;
     private double longitude;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_layout);
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
         name = getIntent().getStringExtra("name");
         latitude = Double.valueOf(getIntent().getStringExtra("latitude"));
         longitude = Double.valueOf(getIntent().getStringExtra("longitude"));
-
     }
 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         LatLng sydney = new LatLng(longitude, latitude);
         googleMap.addMarker(new MarkerOptions().position(sydney)
                 .title(name));
