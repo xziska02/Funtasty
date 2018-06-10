@@ -1,4 +1,4 @@
-package sk.peterziska.funtasty.UI.Activity;
+package sk.peterziska.meteors.UI.Activity;
 
 
 import android.os.Build;
@@ -18,10 +18,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import sk.peterziska.funtasty.Data.Meteor;
-import sk.peterziska.funtasty.Presenter.MainPresenter;
-import sk.peterziska.funtasty.R;
-import sk.peterziska.funtasty.UI.Adapters.MeteorAdapter;
+import sk.peterziska.meteors.Data.Meteor;
+import sk.peterziska.meteors.Presenter.MainPresenter;
+import sk.peterziska.meteors.R;
+import sk.peterziska.meteors.UI.Adapters.MeteorAdapter;
 
 public class MeteorActivity extends AppCompatActivity implements MeteorActivityInt{
 

@@ -1,4 +1,4 @@
-package sk.peterziska.funtasty.Presenter;
+package sk.peterziska.meteors.Presenter;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,11 +26,11 @@ import java.util.concurrent.TimeUnit;
 
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
-import sk.peterziska.funtasty.Data.DatabaseManager;
-import sk.peterziska.funtasty.Data.Meteor;
-import sk.peterziska.funtasty.MyJobService;
-import sk.peterziska.funtasty.Services.MeteorAPI;
-import sk.peterziska.funtasty.UI.Activity.MeteorActivity;
+import sk.peterziska.meteors.Data.DatabaseManager;
+import sk.peterziska.meteors.Data.Meteor;
+import sk.peterziska.meteors.MyJobService;
+import sk.peterziska.meteors.Services.MeteorAPI;
+import sk.peterziska.meteors.UI.Activity.MeteorActivity;
 
 public class MainPresenter implements PresenterInterface{
 

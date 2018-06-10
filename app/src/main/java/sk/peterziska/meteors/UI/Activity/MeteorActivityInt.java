@@ -1,8 +1,8 @@
-package sk.peterziska.funtasty.UI.Activity;
+package sk.peterziska.meteors.UI.Activity;
 
 import java.util.List;
 
-import sk.peterziska.funtasty.Data.Meteor;
+import sk.peterziska.meteors.Data.Meteor;
 
 public interface MeteorActivityInt {
     void showProgressBar();

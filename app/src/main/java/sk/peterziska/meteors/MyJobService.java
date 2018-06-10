@@ -1,4 +1,4 @@
-package sk.peterziska.funtasty;
+package sk.peterziska.meteors;
 
 import android.util.Log;
 import android.widget.Toast;
@@ -6,7 +6,7 @@ import android.widget.Toast;
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
 
-import sk.peterziska.funtasty.Services.MeteorAPI;
+import sk.peterziska.meteors.Services.MeteorAPI;
 
 public class MyJobService extends JobService {
 

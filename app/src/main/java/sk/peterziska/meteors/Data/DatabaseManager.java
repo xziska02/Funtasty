@@ -1,4 +1,4 @@
-package sk.peterziska.funtasty.Data;
+package sk.peterziska.meteors.Data;
 
 import java.util.List;
 
@@ -16,7 +16,6 @@ public class DatabaseManager {
     }
 
     public static DatabaseManager getInstance( ) {
-
         if (instance == null){
             instance = new DatabaseManager();
         }
@@ -24,7 +23,6 @@ public class DatabaseManager {
     }
 
     public void saveToDatabase(final List<Meteor> meteors) {
-
         realm.beginTransaction();
         realm.insertOrUpdate(meteors);
         realm.commitTransaction();
@@ -35,13 +33,11 @@ public class DatabaseManager {
     }
 
     public RealmResults<Meteor> getMeteors(){
-
         return realm.where(Meteor.class).
                 findAll().sort("mass", Sort.DESCENDING);
     }
 
     public void realmClose(){
-
         instance = null;
         realm.close();
     }

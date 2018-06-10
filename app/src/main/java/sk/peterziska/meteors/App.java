@@ -1,4 +1,4 @@
-package sk.peterziska.funtasty;
+package sk.peterziska.meteors;
 
 import android.app.Application;
 

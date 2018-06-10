@@ -1,4 +1,4 @@
-package sk.peterziska.funtasty.Data;
+package sk.peterziska.meteors.Data;
 
 import com.google.gson.annotations.SerializedName;
 

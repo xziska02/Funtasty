@@ -1,4 +1,4 @@
-package sk.peterziska.funtasty.Services;
+package sk.peterziska.meteors.Services;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -15,8 +15,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import sk.peterziska.funtasty.Data.DatabaseManager;
-import sk.peterziska.funtasty.Data.Meteor;
+import sk.peterziska.meteors.Data.DatabaseManager;
+import sk.peterziska.meteors.Data.Meteor;
 
 public class MeteorAPI {
 
@@ -68,7 +68,4 @@ public class MeteorAPI {
         retrofit = builder.build();
         meteorInterfaceAPI = retrofit.create(MeteorInterfaceAPI.class);
     }
-
-
-
 }

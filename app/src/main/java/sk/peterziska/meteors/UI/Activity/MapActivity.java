@@ -1,4 +1,4 @@
-package sk.peterziska.funtasty.UI.Activity;
+package sk.peterziska.meteors.UI.Activity;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -10,7 +10,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import sk.peterziska.funtasty.R;
+import sk.peterziska.meteors.R;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
